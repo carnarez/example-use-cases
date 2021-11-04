@@ -1,0 +1,242 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trainingk8s-conf2
+data:
+  API_HOST: "localhost/pick"
+  API_PORT: "5000"
+  API_PROTOCOL: https
+  HOARD: "true"
+  INTERVAL: "1"
+  LOG_LEVEL: DEBUG
+  POSTGRES_DB: messages
+  POSTGRES_HOST: trainingk8s-pile
+  POSTGRES_PASSWORD: S3CR3T
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: myself
+  REDIS_PASSWORD: S3CR3T
+  REDIS_HOST: trainingk8s-pass
+  REDIS_PORT: "6379"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trainingk8s-pass
+spec:
+  selector:
+    matchLabels:
+      app: trainingk8s-pass
+  template:
+    metadata:
+      labels:
+        app: trainingk8s-pass
+    spec:
+      containers:
+      - name: trainingk8s-pass
+        image: redis:alpine
+        command:
+        - "redis-server"
+        - "--requirepass"
+        - "S3CR3T"
+        envFrom:
+        - configMapRef:
+            name: trainingk8s-conf2
+        ports:
+         - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trainingk8s-pass
+spec:
+  selector:
+    app: trainingk8s-pass
+  ports:
+    - port: 6379
+      targetPort: 6379
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: trainingk8s-pile
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: microk8s-hostpath
+  resources:
+    requests:
+      storage: 500M
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: trainingk8s-pile
+spec:
+  serviceName: trainingk8s-pile
+  selector:
+    matchLabels:
+      app: trainingk8s-pile
+  template:
+    metadata:
+      labels:
+        app: trainingk8s-pile
+    spec:
+      containers:
+      - name: trainingk8s-pile
+        image: postgres:alpine
+        envFrom:
+        - configMapRef:
+            name: trainingk8s-conf2
+        ports:
+         - containerPort: 5432
+        volumeMounts:
+        - name: trainingk8s-data
+          mountPath: "/var/lib/postgresql/data"
+      volumes:
+      - name: trainingk8s-data
+        persistentVolumeClaim:
+          claimName: trainingk8s-pile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trainingk8s-pile
+spec:
+  selector:
+    app: trainingk8s-pile
+  ports:
+    - port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trainingk8s-pull
+spec:
+  selector:
+    matchLabels:
+      app: trainingk8s-pull
+  template:
+    metadata:
+      labels:
+        app: trainingk8s-pull
+    spec:
+      containers:
+      - name: trainingk8s-pull
+        image: trainingk8s-pull:latest
+        imagePullPolicy: Never
+        command:
+        - "supervisord"
+        envFrom:
+        - configMapRef:
+            name: trainingk8s-conf2
+        ports:
+         - containerPort: 5000
+         - containerPort: 5050
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trainingk8s-pick
+spec:
+  selector:
+    app: trainingk8s-pull
+  ports:
+    - port: 5000
+      targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trainingk8s-pick
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /pick(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: trainingk8s-pick
+            port:
+              number: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trainingk8s-show
+spec:
+  selector:
+    matchLabels:
+      app: trainingk8s-show
+  template:
+    metadata:
+      labels:
+        app: trainingk8s-show
+    spec:
+      containers:
+      - name: trainingk8s-show
+        image: trainingk8s-show:latest
+        imagePullPolicy: Never
+        command:
+        - "sh"
+        - "/usr/src/entrypoint.sh"
+        envFrom:
+        - configMapRef:
+            name: trainingk8s-conf2
+        ports:
+         - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trainingk8s-show
+spec:
+  selector:
+    app: trainingk8s-show
+  ports:
+    - port: 5050
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: trainingk8s-show
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: trainingk8s-show
+            port:
+              number 5050
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: trainingk8s-push
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: trainingk8s-push
+            image: trainingk8s-push:latest
+            imagePullPolicy: Never
+            command:
+            - "python"
+            - "push.py"
+            envFrom:
+            - configMapRef:
+                name: trainingk8s-conf2
+          restartPolicy: OnFailure

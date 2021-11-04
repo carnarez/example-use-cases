@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.namePrefix" . }}-pull
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "chart.namePrefix" . }}-pull
+  template:
+    metadata:
+      labels:
+        app: {{ include "chart.namePrefix" . }}-pull
+    spec:
+      containers:
+      - name: {{ include "chart.namePrefix" . }}-pull
+        image: {{ .Values.pullImage.repository }}:{{ .Values.pullImage.version }}
+        {{- with .Values.pullImage.pullPolicy }}
+        imagePullPolicy: {{ toYaml . }}
+        {{- end }}
+        command:
+        - "python"
+        - "pull.py"
+        envFrom:
+        - configMapRef:
+            name: {{ include "chart.namePrefix" . }}-conf1

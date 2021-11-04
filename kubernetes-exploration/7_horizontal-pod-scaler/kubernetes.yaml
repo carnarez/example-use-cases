@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trainingk8s-load
+spec:
+  selector:
+    matchLabels:
+      app: trainingk8s-load
+  template:
+    metadata:
+      labels:
+        app: trainingk8s-load
+    spec:
+      containers:
+      - name: trainingk8s-load
+        image: trainingk8s-load:latest
+        imagePullPolicy: Never
+        command:
+        - "gunicorn"
+        - "--bind=0.0.0.0:5000" 
+        - "--log-level=WARNING" 
+        - "--timeout=900" 
+        - "heavy:api"
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trainingk8s-load
+spec:
+  selector:
+    app: trainingk8s-load
+  ports:
+  - port: 5000
+    targetPort: 5000
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: trainingk8s-load
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: trainingk8s-load
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 75

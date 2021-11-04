@@ -1,0 +1,7 @@
+falcon
+falcon_cors
+gunicorn
+psycopg2
+redis
+sqlalchemy
+supervisor

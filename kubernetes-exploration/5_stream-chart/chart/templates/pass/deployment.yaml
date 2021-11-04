@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.namePrefix" . }}-pass
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "chart.namePrefix" . }}-pass
+  template:
+    metadata:
+      labels:
+        app: {{ include "chart.namePrefix" . }}-pass
+    spec:
+      containers:
+      - name: {{ include "chart.namePrefix" . }}-pass
+        image: {{ .Values.passImage.repository }}:{{ .Values.passImage.version }}
+        {{- with .Values.passImage.pullPolicy }}
+        imagePullPolicy: {{- toYaml . }}
+        {{- end }}
+        ports:
+        - containerPort: {{ .Values.pass.containerPort }}

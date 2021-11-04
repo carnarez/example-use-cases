@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <nav>
+        <div>
+          <span class="time">
+            <input type="number" :min="since" :max="until" placeholder="0" size="11" v-model.number="sinceValue" />
+          </span>
+          <span class="time">
+            <input type="number" :min="sinceValue" :max="until" :placeholder="until" size="11" v-model.number="untilValue" />
+          </span>
+          <span class="number">
+            <input type="number" min="1" placeholder="1" size="4" v-model.number="maxNbValue" />
+          </span>
+          <button @click="fetchMessages">
+            <span class="refresh">Refresh</span>
+          </button>
+	  <span>
+            {{ messages.length }} message(s)
+          </span>
+        </div>
+        <div>
+          <span class="now">{{ until }}</span>
+          <span class="gitlab"><a href="https://gitlab.com/xomnia/">GitLab</a></span>
+        </div>
+      </nav>
+      <hr />
+      <main>
+        <div v-for="m in messages" class="message">
+          <span class="timestamp">{{ m.timestamp }}</span>
+          <span class="content">{{ m.message }}</span>
+          <span class="id">{{ m.id }}</span>
+        </div>
+      </main>
+      <script>
+        const app = new Vue({
+          el: '#app',
+          data: {
+            apiUri: 'API_URI',
+            messages: [],
+            interval: null,
+            since: 0,
+            until: null,
+            sinceValue: null,
+            untilValue: null,
+            maxNbValue: 1
+          },
+          methods: {
+            currentTimestamp: function () {
+              this.until = Math.round(new Date().getTime()/1e3, 0)
+            },
+            fetchMessages: function () {
+              let sinceValue = this.sinceValue,
+                  untilValue = this.untilValue
+              if (sinceValue === null || sinceValue === '')
+                sinceValue = this.since
+              if (untilValue === null || untilValue === '')
+                untilValue = this.until
+              if (this.maxNbValue === 0 || this.maxNbValue === '')
+                this.maxNbValue = 1
+              fetch(this.apiUri + '/list?since=' + sinceValue + '&until=' + untilValue)
+                .then(resp => resp.json())
+                .then(json => this.messages = json.reverse().slice(0, this.maxNbValue))
+            }
+          },
+          created () {
+            this.currentTimestamp
+            interval = window.setInterval(this.currentTimestamp, 1000)
+            console.log('Will try to fetch from: ' + this.apiUri + ', wish me luck.')
+          },
+          destroyed () {
+            clearInterval(this.interval)
+          }
+        })
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trainingk8s-conf1
+data:
+  API_PORT: "5000"
+  HOARD: "false"
+  INTERVAL: "1"
+  LOG_LEVEL: DEBUG
+  REDIS_HOST: trainingk8s-pass-redis-master
+  REDIS_PORT: "6379"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trainingk8s-pass
+spec:
+  selector:
+    app: trainingk8s-pass-redis-master
+  ports:
+    - port: 6379
+      targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trainingk8s-pull
+spec:
+  selector:
+    matchLabels:
+      app: trainingk8s-pull
+  template:
+    metadata:
+      labels:
+        app: trainingk8s-pull
+    spec:
+      containers:
+      - name: trainingk8s-pull
+        image: trainingk8s-pull:latest
+        imagePullPolicy: Never
+        command:
+        - "python"
+        - "pull.py"
+        envFrom:
+        - configMapRef:
+            name: trainingk8s-conf1
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: trainingk8s-push-once
+spec:
+  template:
+    spec:
+      containers:
+      - name: trainingk8s-push-once
+        image: trainingk8s-push:latest
+        imagePullPolicy: Never
+        command:
+        - "python"
+        - "push.py"
+        envFrom:
+        - configMapRef:
+            name: trainingk8s-conf1
+      restartPolicy: Never
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: trainingk8s-push-1min
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: trainingk8s-push-1min
+            image: trainingk8s-push:latest
+            imagePullPolicy: Never
+            command:
+            - "python"
+            - "push.py"
+            envFrom:
+            - configMapRef:
+                name: trainingk8s-conf1
+          restartPolicy: OnFailure

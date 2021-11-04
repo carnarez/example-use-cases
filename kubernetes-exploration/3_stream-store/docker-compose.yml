@@ -1,0 +1,63 @@
+version: '3.7'
+
+x-service: &common
+  env_file: envvars
+  networks:
+    - trainingk8snet
+  restart: unless-stopped
+
+services:
+
+  pass:
+    <<: *common
+    image: redis:alpine
+    container_name: trainingk8s-pass
+    command: redis-server --requirepass S3CR3T
+
+  pile:
+    <<: *common
+    image: postgres:alpine
+    container_name: trainingk8s-pile
+
+  pull:
+    <<: *common
+    build:
+      context: ./pull
+      dockerfile: Dockerfile
+    image: trainingk8s-pull
+    container_name: trainingk8s-pull
+    depends_on:
+      - pass
+    ports:
+      - 5000:5000
+    command: supervisord
+
+  push:
+    <<: *common
+    build:
+      context: ./push
+      dockerfile: Dockerfile
+    image: trainingk8s-push
+    container_name: trainingk8s-push
+    depends_on:
+      - pass
+      - pull
+    command: python push.py
+    restart: "no"
+
+  show:
+    <<: *common
+    build:
+      context: ./show
+      dockerfile: Dockerfile
+    image: trainingk8s-show
+    container_name: trainingk8s-show
+    depends_on:
+      - pull
+    ports:
+      - 5050:80
+    command: sh /usr/src/entrypoint.sh
+
+networks:
+  trainingk8snet:
+    name: trainingk8snet

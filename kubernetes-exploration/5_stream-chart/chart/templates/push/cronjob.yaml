@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "chart.namePrefix" . }}-push-1min
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: {{ include "chart.namePrefix" . }}-push-1min
+            image: {{ .Values.pushImage.repository }}:{{ .Values.pushImage.version }}
+            {{- with .Values.pushImage.pullPolicy }}
+            imagePullPolicy: {{ toYaml . }}
+            {{- end }}
+            command:
+            - "python"
+            - "push.py"
+            envFrom:
+            - configMapRef:
+                name: {{ include "chart.namePrefix" . }}-conf1
+          restartPolicy: OnFailure
