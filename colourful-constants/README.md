@@ -1,4 +1,6 @@
-# Colourful Pi
+# Colourful constants
+
+## Pi
 
 One afternoon to lose? Let's visualize [Pi](https://en.wikipedia.org/wiki/Pi) using your
 favourite language. (The idea is
@@ -29,3 +31,11 @@ def pi_digits(n):
 
 Feel free to re-implement in your own chosen language and fulfill your darkest
 mathematical fantasies. But we want visualizations.
+
+## e, Apery, Catalan, ...
+
+[Let's get even nerdier!](http://www.numberworld.org/y-cruncher/internals/formulas.html)
+Check [this one](http://www.numberworld.org/y-cruncher/#Download) out and compute a
+couple digits of some random irrational numbers.
+
+Apply the same idea as above. I need colourful posters for my bathroom.
