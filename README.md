@@ -4,6 +4,7 @@ anymore, or even worth spending time on.
 * [Async API](async-api) where one can explore a simple `Celery`/`Redis`-based
   construct to tackle long-lasting API requests. (_The folder already contains
   implementations of both synchronous and asynchronous versions._)
+* [Colourful Pi](colourful-pi) when one has an afternoon to lose...
 * [Database exploration](database-exploration) where one can play with containerized
   SQL and NoSQL services, and learn a few things regarding relational databases,
   hashing _vs._ encryption, pub/sub, and a few more details.
