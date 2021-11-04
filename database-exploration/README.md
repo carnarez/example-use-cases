@@ -16,7 +16,7 @@ Prices (subscription, insurance, repairs, _etc._) are left to your discretion if
 
 _Please let me know of any improvements needed on the statistics._
 
-## `SQL`.
+## SQL
 
 > Update the database after each event, once the data is ingested.
 
@@ -49,7 +49,7 @@ The company is trying its best to follow the GDPR ruling. Two teams are claiming
 * The **BI team** would like to build a completely anonymous dashboard. They are planning to query the database directly; but the legal team did not allow them to _see_ the sensitive data (BSN, bank accounts, name, _etc._), only a _hashed_ version of it. Strong of your previous implementation (last bullet of the previous section), create a new table that will hold the events (subscription/insurance, bike rent, bike drop), including _hashed_ data using the [common library](https://docs.python.org/3/library/hashlib.html). _Keep in mind that it isn't completely anonymised as the same data will produce the same hash!_
 * The **Advanced Analytics team** who would like to join this data with other data sources related to the same customers (identified by their BSN). Identically as the BI team, the data scientists members of this team did not receive agreement from the legal team to _see_ the sensitive data. But their data engineer is allowed to perform joins with data queried from your tables. After discussion with all parties, it has been decided that you would provide the data in an encrypted form, the data engineer being the only one allowed to decrypt it (the only one with the key). Modify your models to store this data in an encrypted format (see [example](https://sqlalchemy-utils.readthedocs.io/en/latest/_modules/sqlalchemy_utils/types/encrypted/encrypted_type.html); look in the docstring of the `StringEncryptedType` object); anyone (data scientist) with a version of the data models _without_ the decryption logic will see random gibberish, but the engineer to which you delivered the complete data models will get the _clear_ data without, automatically decrypted by `SQLAlchemy` on the fly. _Note that in this case the visible data is completely random and_ not _consistent over the same underlying values. Joining or indexing (for example) are thus completely meaningless._
 
-### `NoSQL`
+### NoSQL
 
 > Push events to a key/value in-memory database.
 
