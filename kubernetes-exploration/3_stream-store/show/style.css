@@ -10,7 +10,6 @@
   --background: #fff;
   --background-highlighted: #eee;
   --background-highlighted-hover: #ddd;
-  --gitlab: #fc6d27;
 }
 
 * {
@@ -120,25 +119,6 @@ nav span.now:hover {
 
 nav span.now:before {
   content: '\f017';
-}
-
-nav span.gitlab a {
-  color: var(--disabled);
-  text-decoration: none;
-  transition: .5s all;
-}
-
-nav span.gitlab:hover a {
-  color: var(--gitlab);
-}
-
-nav span.gitlab:before {
-  content: '\f296';
-  font-family: 'Font Awesome 5 Brands';
-}
-
-nav span.gitlab:hover:before {
-  color: var(--gitlab);
 }
 
 /* message */
