@@ -22,21 +22,22 @@ The file `app/model/models.py` contains for now two algorithms, a simple multiva
 
 ### Spin it up
 
-Get to the right branch of this repo, and using a proper [setup](https://docs.docker.com/install/) of `Docker`:
+Extract the `sync.tgz` archive, and using a proper [setup](https://docs.docker.com/install/) of `Docker`:
 
 ```bash
+$ cd sync/
 $ docker build -t sync-app:0.1 .
 $ docker run --rm sync-app
 ```
 
 And see you at [http://localhost:5000/ping](http://localhost:5000/ping). For the other endpoints, I let you browse the code.
 
-Check at the [bottom of this page](#but-it-worked-on-your-machine...) for the warnings you might encounter along the way.
+Check at the [bottom of this page](#but-it-worked-better-on-your-machine...) for the warnings you might encounter along the way.
 
 ### Structure of the project
 
 ```text
-./
+sync/
 ├── app/
 |   ├── __init__.py
 |   ├── data/
@@ -56,11 +57,11 @@ I kept a generator in the `app/tasks.py` file as you might want to make data ing
 
 ### Spin it up
 
-To spin the API, two `celery` workers, `redis` as broker _and_ backend, and `flower` for monitoring (five `alpine` containers out of two images), get to the right branch of this repo, and simply go with the usual:
+To spin the API, two `celery` workers, `redis` as broker _and_ backend, and `flower` for monitoring (five `alpine` containers out of two images), extract the `async.tgz` archive and simply go with the usual:
 
 ```bash
-$ docker-compose build
-$ docker-compose up
+$ cd async/
+$ docker-compose up --build
 ```
 
 Check if I am not making stuff up:
@@ -80,14 +81,14 @@ fa112754d903   asycn-app      "gunicorn app:api --bind 0.0.0.0:5000"            
 31507b50bcc7   async-app      "flower --app app.tasks"                                                      7 hours ago   Up 4 minutes   0.0.0.0:5555->5555/tcp   flower
 ```
 
-If your [environment](https://docs.docker.com/compose/install/) (`Docker` & `docker-compose`) is setup correctly it should work straight out of the box. _(But does it ever...)_ Then see you at [http://localhost:5000/ping](http://localhost:5000/ping). For the other endpoints, I let you browse the code.
+If your [environment](https://docs.docker.com/compose/install/) (`Docker` & `docker-compose`) is set up correctly it should work straight out of the box. _(But does it ever...)_ Then see you at [http://localhost:5000/ping](http://localhost:5000/ping). For the other endpoints, I let you browse the code.
 
-Check at the [bottom of this page](#but-it-worked-on-your-machine...) for the warnings you might encounter along the way.
+Check at the [bottom of this page](#but-it-worked-better-on-your-machine...) for the warnings you might encounter along the way.
 
 ### Structure of the project
 
 ```text
-./
+async/
 ├── app/
 |   ├── __init__.py
 |   ├── data/
@@ -123,7 +124,7 @@ b795d34f8d00   async-app         "celery worker --app app.tasks --concurrency 2 
 ## But it worked better on your machine...
 
 * `chromium` seems to mistreat drama queen `gunicorn` which in return breaks up often with a `[CRITICAL] WORKER TIMEOUT`. Read [#1801](https://github.com/benoitc/gunicorn/issues/1801) (towards the end) if you really have time; otherwise, know it is not impeding and let it be. And we are aiming at `nginx` anyway, see [below](#other-links).
-* If/When encountering the delightful `AttributeError: module 'tornado.web' has no attribute 'asynchronous'` report to [#878](https://github.com/mher/flower/issues/878) or simply add `tornado==5.1.1` in your `requirements.txt` (last version including the asynchronous calls needed by `flower`; this latter should know better and make it a hard version requirement).
+* If/When encountering the delightful `AttributeError: module 'tornado.web' has no attribute 'asynchronous'` report to [#878](https://github.com/mher/flower/issues/878) or simply pin `tornado` version to `5.1.1` (last version including the asynchronous calls needed by `flower`; this latter should know better and make it a hard version requirement).
 * I do not care about `RuntimeWarning: You're running the worker with superuser privileges: this is absolutely not recommended!` warnings, despite reading [this topic on their FAQ](http://docs.celeryproject.org/en/latest/faq.html#is-it-safe-to-run-celery-worker-as-root). I simply turn that off by setting the `loglevel` to `WARNING`. **(And decline all responsibilities.)** Good exercise to add some lines to the `Dockerfile` to fix that.
 * The quantities marked `N/A` at [http://localhost:5555/broker](http://localhost:5555/broker) are only available for `RabbitMQ`; if you do not believe me see [#114](https://github.com/mher/flower/issues/114) (and especially [this comment](https://github.com/mher/flower/issues/114#issuecomment-23379895)).
 

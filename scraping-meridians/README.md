@@ -8,9 +8,9 @@ Decide for yourself the direction to follow (east or west), or check that the re
 the same one way or the other! And remember to use _all_ information available,
 including cell background colours.
 
-As the resolution of such a description is not as fine as we would like, wrap an API
-around your scraped dataset to serve averaged situation (_e.g._, land or water) for any
-queried pair of coordinates.
+As the resolution of such a description is not as fine as we would like, wrap an
+[API](https://fastapi.tiangolo.com/) around your scraped dataset to serve averaged
+situation (_e.g._, land or water) for any queried pair of coordinates.
 
 One could also decide to plot instant plane positions extracted from the
 [OpenSky Network](https://opensky-network.org/) (check out the
