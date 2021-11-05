@@ -36,6 +36,13 @@ mathematical fantasies. But we want visualizations.
 
 [Let's get even nerdier!](http://www.numberworld.org/y-cruncher/internals/formulas.html)
 Check [this one](http://www.numberworld.org/y-cruncher/#Download) out and compute a
-couple digits of some random irrational numbers.
+couple digits of some random irrational numbers. Then apply the same idea as above. I
+need colourful posters for my bathroom.
 
-Apply the same idea as above. I need colourful posters for my bathroom.
+Quick run after downloading `y-cruncher` (v0.7.8.9507, static):
+
+```bash
+$ ./y-cruncher custom catalan -dec:1000
+$ cat "Catalan - Dec - Pilehrood (short).txt"
+0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
+```
