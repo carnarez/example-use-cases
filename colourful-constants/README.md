@@ -42,7 +42,7 @@ need colourful posters for my bathroom.
 Quick run after downloading `y-cruncher` (v0.7.8.9507, static):
 
 ```bash
-$ ./y-cruncher custom catalan -dec:1000
+$ ./y-cruncher custom catalan -dec:100
 $ cat "Catalan - Dec - Pilehrood (short).txt"
 0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
 ```
