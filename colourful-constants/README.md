@@ -1,14 +1,16 @@
 # Colourful constants
 
-## Pi
+## π
 
-One afternoon to lose? Let's visualize [Pi](https://en.wikipedia.org/wiki/Pi) using your
+One afternoon to lose? Let's visualize [π](https://en.wikipedia.org/wiki/Pi) using your
 favourite language. (The idea is
-[not mine](https://www.visualcinnamon.com/portfolio/the-art-in-pi/).)
+[not mine](https://www.visualcinnamon.com/portfolio/the-art-in-pi/); if you like the
+idea (and π), please check her posters available
+[there](https://shop.visualcinnamon.com/collections/the-art-in-pi).)
 
 For each digit, choose a direction and a colour, and plot it as a vector. Here are some
 download [links](https://www.angio.net/pi/digits.html) for up to four billions
-pre-computed digits of pi. Best and/or smoothest and/or funkiest and/or most psychedelic
+pre-computed digits of π. Best and/or smoothest and/or funkiest and/or most psychedelic
 visualization wins!
 
 And if you decide to _compute_ the digits yourself, below an implementation of the
@@ -16,7 +18,7 @@ And if you decide to _compute_ the digits yourself, below an implementation of t
 
 ```python
 def pi_digits(n):
-    """Generate n digits of Pi via the Spigot algorithm by A. Sale et al."""
+    """Generate n digits of π via the Spigot algorithm by A. Sale et al."""
     k, a, b, a1, b1 = 2, 4, 1, 12, 4
     while n > 0:
         p, q, k = k * k, 2 * k + 1, k + 1
@@ -46,3 +48,22 @@ $ ./y-cruncher custom catalan -dec:100
 $ cat "Catalan - Dec - Pilehrood (short).txt"
 0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
 ```
+
+or:
+
+```bash
+$ VERSION=0.7.8.9507
+$ wget -O y-cruncher.tar.xz http://www.numberworld.org/y-cruncher/y-cruncher%20v$VERSION-static.tar.xz
+$ tar -xf y-cruncher.tar.xz
+$ mv "y-cruncher v$VERSION" y-cruncher_$VERSION
+$ for c in apery e pi; do
+>   mkdir -p constants/$c;
+>   ./y-cruncher_$VERSION/y-cruncher custom $c -dec:1M -o constants/$c
+>   mv constants/$c/*Dec*.txt" constants/$c.dat
+>   rm -r constants/$c
+> done
+```
+
+Color management in `Python` can be cumbersome... but check the pretty nifty
+[`colour` package](https://github.com/vaab/colour), particularly useful to generate
+gradients of random size.

@@ -1,0 +1,16 @@
+{
+    "data": {
+        "source": "constants/e.dat",
+        "first": 0,
+        "until": 10000
+    },
+    "text": {
+        "background": "e",
+        "title": "Colourful irrationality",
+        "caption": "The 10,000 first digits of e"
+    },
+    "tone": {
+        "gradient_start": "violet",
+        "gradient_until": "red"
+    }
+}

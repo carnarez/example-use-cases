@@ -5,6 +5,7 @@ anymore, or even worth spending time on.
   construct to tackle long-lasting API requests. (_The folder already contains
   implementations of both synchronous and asynchronous versions._)
 * [Colourful constants](colourful-constants) when one has an afternoon to lose...
+  (_The folder already contains an implementation._)
 * [Database exploration](database-exploration) where one can play with containerized
   SQL and NoSQL services, and learn a few things regarding relational databases,
   hashing _vs._ encryption, pub/sub, and a few more details.

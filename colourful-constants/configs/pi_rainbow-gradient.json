@@ -1,0 +1,16 @@
+{
+    "data": {
+        "source": "constants/pi.dat",
+        "first": 0,
+        "until": 100000
+    },
+    "text": {
+        "background": "π",
+        "title": "Colourful irrationality",
+        "caption": "The 100,000 first digits of π"
+    },
+    "tone": {
+        "gradient_start": "violet",
+        "gradient_until": "red"
+    }
+}
