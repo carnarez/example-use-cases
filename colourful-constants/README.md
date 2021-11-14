@@ -3,10 +3,10 @@
 ## π
 
 One afternoon to lose? Let's visualize [π](https://en.wikipedia.org/wiki/Pi) using your
-favourite language. (The idea is
+favourite language. (_The idea is
 [not mine](https://www.visualcinnamon.com/portfolio/the-art-in-pi/); if you like the
-idea (and π), please check her posters available
-[there](https://shop.visualcinnamon.com/collections/the-art-in-pi).)
+idea -and π- please check her posters available
+[there](https://shop.visualcinnamon.com/collections/the-art-in-pi)._)
 
 For each digit, choose a direction and a colour, and plot it as a vector. Here are some
 download [links](https://www.angio.net/pi/digits.html) for up to four billions
@@ -34,7 +34,7 @@ def pi_digits(n):
 Feel free to re-implement in your own chosen language and fulfill your darkest
 mathematical fantasies. But we want visualizations.
 
-## e, Apery, Catalan, ...
+## _e_, Apery, Catalan, ...
 
 [Let's get even nerdier!](http://www.numberworld.org/y-cruncher/internals/formulas.html)
 Check [this one](http://www.numberworld.org/y-cruncher/#Download) out and compute a
@@ -57,13 +57,13 @@ $ wget -O y-cruncher.tar.xz http://www.numberworld.org/y-cruncher/y-cruncher%20v
 $ tar -xf y-cruncher.tar.xz
 $ mv "y-cruncher v$VERSION" y-cruncher_$VERSION
 $ for c in apery e pi; do
->   mkdir -p constants/$c;
+>   mkdir -p constants/$c
 >   ./y-cruncher_$VERSION/y-cruncher custom $c -dec:1M -o constants/$c
->   mv constants/$c/*Dec*.txt" constants/$c.dat
+>   mv constants/$c/*Dec*.txt constants/$c.dat
 >   rm -r constants/$c
 > done
 ```
 
 Color management in `Python` can be cumbersome... but check the pretty nifty
 [`colour` package](https://github.com/vaab/colour), particularly useful to generate
-gradients of random size.
+gradients of random sizes.
