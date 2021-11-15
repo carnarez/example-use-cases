@@ -48,7 +48,3 @@ $ ./y-cruncher custom catalan -dec:100
 $ cat "Catalan - Dec - Pilehrood (short).txt"
 0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
 ```
-
-Color management in `Python` can be cumbersome... but check the pretty nifty
-[`colour` package](https://github.com/vaab/colour), particularly useful to generate
-gradients of random sizes.
