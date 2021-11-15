@@ -49,21 +49,6 @@ $ cat "Catalan - Dec - Pilehrood (short).txt"
 0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
 ```
 
-or, more systematically:
-
-```bash
-$ VERSION=0.7.8.9507
-$ wget -O y-cruncher.tar.xz http://www.numberworld.org/y-cruncher/y-cruncher%20v$VERSION-static.tar.xz
-$ tar -xf y-cruncher.tar.xz
-$ mv "y-cruncher v$VERSION" y-cruncher_$VERSION
-$ for c in apery e pi; do
->   mkdir -p constants/$c
->   ./y-cruncher_$VERSION/y-cruncher custom $c -dec:1M -o constants/$c
->   mv constants/$c/*Dec*.txt constants/$c.dat
->   rm -r constants/$c
-> done
-```
-
 Color management in `Python` can be cumbersome... but check the pretty nifty
 [`colour` package](https://github.com/vaab/colour), particularly useful to generate
 gradients of random sizes.
