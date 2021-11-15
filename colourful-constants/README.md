@@ -1,17 +1,17 @@
 # Colourful constants
 
-## π
+## _π_
 
-One afternoon to lose? Let's visualize [π](https://en.wikipedia.org/wiki/Pi) using your
-favourite language. (_The idea is
+One afternoon to lose? Let's visualize [_π_](https://en.wikipedia.org/wiki/Pi) using
+your favourite language. (_The idea is
 [not mine](https://www.visualcinnamon.com/portfolio/the-art-in-pi/); if you like the
 idea -and π- please check her posters available
 [there](https://shop.visualcinnamon.com/collections/the-art-in-pi)._)
 
 For each digit, choose a direction and a colour, and plot it as a vector. Here are some
 download [links](https://www.angio.net/pi/digits.html) for up to four billions
-pre-computed digits of π. Best and/or smoothest and/or funkiest and/or most psychedelic
-visualization wins!
+pre-computed digits of _π_. Best and/or smoothest and/or funkiest and/or most
+psychedelic visualization wins!
 
 And if you decide to _compute_ the digits yourself, below an implementation of the
 [Spigot algorithm](https://en.wikipedia.org/wiki/Spigot_algorithm):
@@ -49,7 +49,7 @@ $ cat "Catalan - Dec - Pilehrood (short).txt"
 0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
 ```
 
-or:
+or, more systematically:
 
 ```bash
 $ VERSION=0.7.8.9507
