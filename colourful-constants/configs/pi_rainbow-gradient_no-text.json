@@ -1,0 +1,16 @@
+{
+    "data": {
+        "source": "constants/pi.dat",
+        "first": 0,
+        "until": 1000
+    },
+    "text": {
+        "background": "",
+        "title": "",
+        "caption": ""
+    },
+    "tone": {
+        "gradient_start": "violet",
+        "gradient_until": "red"
+    }
+}
