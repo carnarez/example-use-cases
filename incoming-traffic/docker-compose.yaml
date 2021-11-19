@@ -22,7 +22,7 @@ services:
       - 6379:6379
     restart: unless-stopped
 
-  # fast lane
+  # traffic jam on the exit lane
   producer1:
     <<: *common
     build:
@@ -30,23 +30,41 @@ services:
       dockerfile: Dockerfile
     container_name: traffic-push1
     environment:
-      - LOWER_SPEED=1
-      - UPPER_SPEED=5
-    image: traffic-push
-
-  # traffic jam
-  producer2:
-    <<: *common
-    container_name: traffic-push2
-    environment:
       - LOWER_SPEED=20
       - UPPER_SPEED=24
     image: traffic-push
 
-  # empty lane
+  # fast lane
+  producer2:
+    <<: *common
+    container_name: traffic-push2
+    environment:
+      - LOWER_SPEED=1
+      - UPPER_SPEED=4
+    image: traffic-push
+
+  # fast-ish lane, therefore less busy
   producer3:
     <<: *common
     container_name: traffic-push3
+    environment:
+      - LOWER_SPEED=2
+      - UPPER_SPEED=5
+    image: traffic-push
+
+  # faster lane, way less busy
+  producer4:
+    <<: *common
+    container_name: traffic-push4
+    environment:
+      - LOWER_SPEED=5
+      - UPPER_SPEED=8
+    image: traffic-push
+
+  # empty left-most lane
+  producer5:
+    <<: *common
+    container_name: traffic-push5
     environment:
       - LOWER_SPEED=10
       - UPPER_SPEED=50
