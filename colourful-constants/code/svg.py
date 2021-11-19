@@ -68,7 +68,6 @@ text_svg : string.Template
     - `caption_size`: font size of the subtitle text.
 """
 
-import json
 import math
 import string
 import sys
@@ -76,12 +75,12 @@ import typing
 
 import colour
 import numpy as np
+import yaml
 
 svg: string.Template = string.Template(
     '<?xml version="1.0" encoding="utf-8" ?>\n'
     '<svg '
-    f'width="$width" '
-    f'height="$height" '
+    'width="$width" height="$height" '
     'version="1.2" '
     'xmlns="http://www.w3.org/2000/svg" '
     'xmlns:ev="http://www.w3.org/2001/xml-events" '
@@ -90,47 +89,15 @@ svg: string.Template = string.Template(
     '<defs />'
     '$text'
     '$plot'
+    '$extras'
     '</svg>'
 )
 
 svg_line: string.Template = string.Template(
-    '<line '
-    'x1="$x1" y1="$y1" '
-    'x2="$x2" y2="$y2" '
-    'stroke="$color" '
-    'stroke-linecap="round" '
-    'stroke-width="4" '
-    '/>'
+    '<line x1="$x1" y1="$y1" x2="$x2" y2="$y2" $style />'
 )
 
-svg_text: string.Template = string.Template(
-    '<text '
-    'x="50%" y="50%" '
-    'fill="#f7f7f7" '
-    'font-family="Arial, Helvetica, sans-serif" '
-    'font-size="$background_size" '
-    'dominant-baseline="middle" '
-    'text-anchor="middle"'
-    '>'
-    '$background'
-    '</text>'
-    '<text '
-    'x="3%" y="96.5%" '
-    'fill="#aaaaaa" '
-    'font-family="Arial, Helvetica, sans-serif" '
-    'font-size="$title_size" '
-    '>'
-    '$title'
-    '</text>'
-    '<text '
-    'x="3%" y="99%" '
-    'fill="#aaaaaa" '
-    'font-family="Arial, Helvetica, sans-serif" '
-    'font-size="$caption_size" '
-    '>'
-    '$caption'
-    '</text>'
-)
+svg_text: string.Template = string.Template('<text x="$x" y="$y" $style>$text</text>')
 
 
 def fetch_config(source: str) -> typing.Dict[str, typing.Any]:
@@ -146,7 +113,7 @@ def fetch_config(source: str) -> typing.Dict[str, typing.Any]:
     : typing.Dict[str, typing.Any]
         Dictionary of the configuration options.
     """
-    return json.load(open(source))
+    return yaml.load(open(source).read(), Loader=yaml.Loader)
 
 
 def fetch_digits(source: str, first: int = 0, until: int = 100) -> np.array:
@@ -401,11 +368,11 @@ def render_text(points: np.array, **text: typing.Dict[str, str]) -> str:
 if __name__ == "__main__":
     config = fetch_config(sys.argv[1])
 
-    digits = fetch_digits(**config["data"])
-    colors = color_scheme(**config["tone"], gradient_steps=digits.shape[0])
+    digits = fetch_digits(**config["plot"]["data"])
+    colors = color_scheme(**config["plot"]["color"], gradient_steps=digits.shape[0])
     
     points = compute_coordinates(digits)
-    points = rescale_coordinates(points, min_width=2500, max_width=2000, max_height=3000)
+    points = rescale_coordinates(points, **(config["plot"].gt("format", {})))
     
     sys.stdout.write(
         svg.substitute(

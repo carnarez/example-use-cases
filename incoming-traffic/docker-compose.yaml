@@ -1,0 +1,65 @@
+version: "3.7"
+
+x-service: &common
+  depends_on:
+    - eventhub
+  env_file: envvars
+  networks:
+    - trafnet
+  restart: unless-stopped
+
+services:
+
+  eventhub:
+    build:
+      context: eventhub
+      dockerfile: Dockerfile
+    container_name: traffic-redis
+    image: traffic-redis
+    networks:
+      - trafnet
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+  # fast lane
+  producer1:
+    <<: *common
+    build:
+      context: producer
+      dockerfile: Dockerfile
+    container_name: traffic-push1
+    environment:
+      - LOWER_SPEED=1
+      - UPPER_SPEED=5
+    image: traffic-push
+
+  # traffic jam
+  producer2:
+    <<: *common
+    container_name: traffic-push2
+    environment:
+      - LOWER_SPEED=20
+      - UPPER_SPEED=24
+    image: traffic-push
+
+  # empty lane
+  producer3:
+    <<: *common
+    container_name: traffic-push3
+    environment:
+      - LOWER_SPEED=10
+      - UPPER_SPEED=50
+    image: traffic-push
+
+  consumer:
+    <<: *common
+    build:
+      context: consumer
+      dockerfile: Dockerfile
+    container_name: traffic-pull
+    image: traffic-pull
+
+networks:
+  trafnet:
+    name: trafnet

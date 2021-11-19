@@ -10,7 +10,7 @@ anymore, or even worth spending time on.
   SQL and NoSQL services, and learn a few things regarding relational databases,
   hashing _vs._ encryption, pub/sub, and a few more details.
 * [Incoming traffic](incoming-traffic) where one can explore a small pub/sub use case
-  involving license plates being streamed in for OCR and "police checks." :construction:
+  involving license plates being streamed in for OCR and "police checks."
 * [Kubernetes exploration](kubernetes-exploration) where one can play with `microk8s`
   (or any other local distribution of `Kubernetes`) to deploy a few containers. Will be
   extended with extras whenever time allows. (_The folder contains the answers to the
