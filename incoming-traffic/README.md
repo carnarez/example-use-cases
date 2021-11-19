@@ -40,7 +40,7 @@ A few services need to be implemented, namely:
   [data model](https://www.sqlalchemy.org/) and database schema are left up to the
   developer. Each record should however contain a timestamp, and the [un]certainty
   associated with the OCR processing. As this road is quite often used for international
-  travels, various nationalities might be encountered; several database tables are
+  travel, various nationalities might be encountered; several database tables are
   expected.
 * One or several consumer(s) tying all the services together, _i.e._, posting to various
   queues (feeds) if different OCR engines are deployed, logging the requests, pushing to
