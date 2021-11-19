@@ -8,10 +8,7 @@ import typing
 
 from redis import Redis
 
-# ---
-# the next three objects are there *just* for the randomness (and the little stupid
-# story I am inventing here)
-
+# the next three objects are *just* for the randomness (and the little story)
 images: typing.List[str] = next(os.walk("images"))[2]
 
 sensor: str = os.environ["HOSTNAME"]
@@ -21,8 +18,7 @@ speeds: typing.Tuple[int] = (
     int(os.environ["UPPER_SPEED"]),
 )
 
-# ---
-
+# connect to redis
 engine: Redis = Redis(
     password=os.environ["REDIS_PASSWORD"],
     host=os.environ["REDIS_HOST"],
