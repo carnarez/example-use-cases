@@ -1,4 +1,6 @@
-Quick consuming code, to be extended with OCR logic for instance.
+Consumer example code snippet, to be extended with OCR logic for instance. Currently
+listening to messages posted on the `snapshots` feed hosted by
+[`Redis Streams`](https://redis.io/topics/streams-intro).
 
 To get an image from the received string:
 

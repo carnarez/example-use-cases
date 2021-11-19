@@ -67,7 +67,7 @@ services:
     container_name: traffic-push5
     environment:
       - LOWER_SPEED=10
-      - UPPER_SPEED=50
+      - UPPER_SPEED=40
     image: traffic-push
 
   consumer:
