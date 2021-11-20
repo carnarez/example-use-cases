@@ -35,12 +35,12 @@ A few services need to be implemented, namely:
   [`Apache Tika`](https://tika.apache.org/) could be used (both have wrappers to
   embed them into their own REST API). Depending on the speed of the service, more
   than one might need to be deployed to process the incoming data.
-* A database of your choice. An easy choice is of course
-  [`PostgreSQL`](https://www.postgresql.org/) that remains easy to interact with. The
+* A database of your choice. An easy option is of course
+  [`PostgreSQL`](https://www.postgresql.org/) that remains simple to interact with. The
   [data model](https://www.sqlalchemy.org/) and database schema are left up to the
   developer. Each record should however contain a timestamp, and the [un]certainty
   associated with the OCR processing. As this road is quite often used for international
-  commerce, various nationalities might be encountered; several database tables are
+  travel, various nationalities might be encountered; several database tables are
   expected.
 * One or several consumer(s) tying all the services together, _i.e._, posting to various
   queues (feeds) if different OCR engines are deployed, logging the requests, pushing to
