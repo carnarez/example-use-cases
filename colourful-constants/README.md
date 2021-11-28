@@ -35,7 +35,7 @@ Feel free to re-implement in your own chosen language and fulfill your darkest
 mathematical fantasies. But we want visualizations. Below the random walk corresponding
 to the first 1,000 decimals of π:
 
-![First 1,000 decimals of π](pi-1k.svg)
+![First 1,000 decimals of π](outputs/pi-1k.svg)
 
 ## _e_, Apery, Catalan, ...
 
@@ -51,3 +51,7 @@ $ ./y-cruncher custom catalan -dec:100
 $ cat "Catalan - Dec - Pilehrood (short).txt"
 0.9159655941772190150546035149323841107741493742816721342664981196217630197762547694793565129261151062
 ```
+
+| Apery | Catalan | _e_ |
+| :-: | :-: | :-: |
+| ![](outputs/apery-1k.svg) | ![](outputs/catalan-1k.svg) | ![](outputs/e-1k.svg) |

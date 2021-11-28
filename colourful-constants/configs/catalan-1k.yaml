@@ -1,0 +1,13 @@
+plot:
+  data:
+    source: "constants/catalan.dat"
+    first: 0
+    until: 1000
+  color:
+    gradient_start: "violet"
+    gradient_until: "red"
+  format:
+    max_height: 500
+  style:
+    stroke-linecap: "round"
+    stroke-width: 4
