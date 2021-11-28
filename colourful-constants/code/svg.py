@@ -247,6 +247,19 @@ def rescale_coordinates(
     """
     factor: typing.Tuple[float, float] = ()
 
+    # translate
+
+    xmax = np.max(points[:,0])
+    ymax = np.max(points[:,1])
+
+    if min_width is not None and xmax < min_width:
+        points[:,0] += (min_width - xmax)/2
+
+    if min_height is not None and ymax < min_height:
+        points[:,1] += (min_height - ymax)/2
+
+    # rescale
+
     xmax = np.max(points[:,0])
     ymax = np.max(points[:,1])
 
@@ -263,25 +276,17 @@ def rescale_coordinates(
         factor = (xf, yf)
 
     elif max_width is not None and max_height is None:
-        factor = (xmax, xmax)
+        xf = max_width/xmax
+        factor = (xf, xf)
 
     elif max_width is None and max_height is not None:
-        factor = (ymax, ymax)
+        yf = max_height/ymax
+        factor = (yf, yf)
 
     else:
         raise ValueError('Provide at least one of "max_width" or "max_height".')
 
-    points[:,0] *= factor[0]
-    points[:,1] *= factor[1]
-
-    xmax = np.max(points[:,0])
-    ymax = np.max(points[:,1])
-
-    if min_width is not None and xmax < min_width:
-        points[:,0] += (min_width - xmax)/2
-
-    if min_height is not None and ymax < min_height:
-        points[:,1] += (min_height - ymax)/2
+    points *= factor
 
     return points
 

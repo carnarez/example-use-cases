@@ -7,10 +7,7 @@ plot:
     gradient_start": "violet"
     gradient_until": "red"
   format:
-    min_width: 2480
-    max_width: 2480
-    min_height: 3508
-    max_height: 3508
+    max_height: 3000
   style:
     stroke-linecap: "round"
     stroke-width: 4

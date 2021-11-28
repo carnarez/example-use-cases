@@ -7,7 +7,6 @@ plot:
     gradient_start: "violet"
     gradient_until: "red"
   format:
-    max_height: 500
+    max_width: 500
   style:
     stroke-linecap: "round"
-    stroke-width: 4
