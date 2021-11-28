@@ -35,7 +35,7 @@ Feel free to re-implement in your own chosen language and fulfill your darkest
 mathematical fantasies. But we want visualizations. Below the random walk corresponding
 to the first 1,000 decimals of π:
 
-![First 1,000 decimals of π](pi-1000.svg)
+![First 1,000 decimals of π](pi-1k.svg)
 
 ## _e_, Apery, Catalan, ...
 

@@ -12,38 +12,34 @@ $ .venv/bin/python svg.py pi_rainbow-gradient.json > output.svg
 
 Expected options are:
 
-```json
-{
-    "data": {
-        "source": "str: path to the source filename including ALL the decimals",
-        "first": "int: first decimal to consider",
-        "until": "int: last decimal to consider"
-    },
-    "text": {
-        "background": "str: large background filigrane text",
-        "title": "str: title of the plot",
-        "caption": "str: any subtitle to the plot"
-    },
-    "tone": {
-        "gradient_start": "str: start color of the gradient (hexadecimal code)",
-        "gradient_until": "str: end color of the gradient"
-    }
-}
+```yaml
+plot:
+  data:
+    source: "constants/pi.dat"  # str: path to the source file including the decimals
+    first: 0                    # int: first decimal to consider
+    until: 1000                 # int: last decimal to consider
+  color:
+    gradient_start: "violet"    # str: start color of the gradient (hexadecimal code)
+    gradient_until: "red"       # str: end color of the gradient
+  format:
+    min_width: 2480             # int: minimum width of the final plot
+    max_width: 2480             # int: maximum width of the final plot
+    min_height: 3508            # int: minimum height of the final plot
+    max_height: 3508            # int: maximum height of the final plot
+  style:
+    ...                         # extra styling options for the SVG lines
 ```
 
 Note that below is also valid (instead of the gradient syntax above):
 
-```json
-{
-    ...
-    "tone": {
-        0: "str: color associated with a decimal digit equals to 0",
-        1: "str: color associated with a decimal digit equals to 1",
-        ...
-        8: "str: color associated with a decimal digit equals to 8",
-        9: "str: color associated with a decimal digit equals to 9"
-    }
-}
+```yaml
+  ...
+  color:
+    0: "#00000f"                # str: color associated with a decimal digit equals to 0
+    1: "#0000ff"                # str: color associated with a decimal digit equals to 1
+    ...                        
+    8: "#000fff"                # str: color associated with a decimal digit equals to 8
+    9: "#00ffff"                # str: color associated with a decimal digit equals to 9
 ```
 
 **Attributes:**
@@ -52,29 +48,21 @@ Note that below is also valid (instead of the gradient syntax above):
     order):
     - `width`: width of the `<svg>` element.
     - `height`: height of the `<svg>` element.
-    - `text`: `<text>` elements acting as the legend of the plot.
-    - `lines`: `<line>` elements defining the plot itself.
+    - `plot`: `<line>` elements defining the plot itself.
 * `line_svg` [`string.Template`]: Template to render a single `<line>` element. Variables substituted:
     - `x1`, `y1`, `x2`, `y2`: coordinates of the extremities of the `<line>` element
       (_better call it a segment then..._).
     - `color`: color of the `<line>` element.
-* `text_svg` [`string.Template`]: Template to render the textual content. Variables substituted:
-    - `background`: large background filigrane text.
-    - `backougrond_size`: font size of the background text.
-    - `title`: title of the plot.
-    - `title_size`: font size of the plot title.
-    - `caption`: any subtitle to the plot.
-    - `caption_size`: font size of the subtitle text.
+    - `style`: extra styling options for the `<line>` element.
 
 **Functions:**
 
-* [`fetch_config()`](#svgfetch_config)
-* [`fetch_digits()`](#svgfetch_digits)
-* [`color_scheme()`](#svgcolor_scheme)
-* [`compute_coordinates()`](#svgcompute_coordinates)
-* [`rescale_coordinates()`](#svgrescale_coordinates)
-* [`render_plot()`](#svgrender_plot)
-* [`render_text()`](#svgrender_text)
+* [`fetch_config()`](#svgfetch_config): Read the configuration of the current plot.
+* [`fetch_digits()`](#svgfetch_digits): Extract the decimals from the source file.
+* [`color_scheme()`](#svgcolor_scheme): Define the color scheme used to light up the path.
+* [`compute_coordinates()`](#svgcompute_coordinates): Generate the coordinates of each step of the path.
+* [`rescale_coordinates()`](#svgrescale_coordinates): Rescale the whole plot to provided dimensions.
+* [`render_plot()`](#svgrender_plot): Render the random walk plot using `SVG` `<line>`s.
 
 ## Functions
 
@@ -194,7 +182,12 @@ Rescale the whole plot to provided dimensions.
 ### `svg.render_plot`
 
 ```python
-render_plot(digits: np.array, points: np.array, colors: typing.List[str]) -> str:
+render_plot(
+    digits: np.array, 
+    points: np.array, 
+    colors: typing.List[str], 
+    styles: typing.Dict[str, str],
+) -> str:
 ```
 
 Render the random walk plot using `SVG` `<line>`s.
@@ -205,24 +198,8 @@ Render the random walk plot using `SVG` `<line>`s.
 * `points` [`numpy.array`]: `NumPy` array of the coordinates corresponding to each step.
 * `colors` [`typing.List[str]`]: List of colors, one for each digit, or list of colors interpolated from the
     defined gradient.
+* `styles` [`typing.Dict[str, str]`]: Extra styling options for the lines.
 
 **Returns:**
 
 * [`str`]: Rendered and collated `<line>`s corresponding to each step.
-
-### `svg.render_text`
-
-```python
-render_text(points: np.array, **text) -> str:
-```
-
-Render a few `SVG` `<text>` elements.
-
-**Parameters:**
-
-* `points` [`numpy.array`]: `NumPy` array of the coordinates corresponding to each step.
-* `text` [`typing.Dict[str, str]`]: Dictionary of the various textual content.
-
-**Returns:**
-
-* [`str`]: Rendered `<text>` items.
