@@ -145,6 +145,15 @@ Keep in mind that if you are using [`Docker Desktop`](https://www.docker.com/pro
 
 ## Add local images to `microk8s` registry
 
+**Update 2021:** `microk8s` now allows to push images directly to a its own [built-in registry](https://microk8s.io/docs/registry-built-in). Kepp on tagging and pushing:
+
+```bash
+$ docker build --tag localhost:32000/whatever:registry
+$ docker push localhost:32000/whatever
+```
+
+and your images should be available within the `microk8s` registry. But the old way also remains:
+
 ```bash
 $ docker[-compose] build ...
 $ docker save trainingk8s-<...>:latest > trainingk8s-<...>.tar
