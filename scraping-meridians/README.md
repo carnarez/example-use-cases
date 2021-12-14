@@ -4,9 +4,6 @@ In this little exercise to discover scraping processes we propose to
 [scrape](https://www.crummy.com/software/BeautifulSoup/) _Wikipedia_ content: the
 [list of meridians](https://en.wikipedia.org/w/index.php?title=Category:Meridians_(geography))
 as a dataset to plot in a fancy 3D representation (bonus point for the fanciness).
-Decide for yourself the direction to follow (east or west), or check that the results
-the same one way or the other! And remember to use _all_ information available,
-including cell background colours.
 
 As the resolution of such a description is not as fine as we would like, wrap an
 [API](https://fastapi.tiangolo.com/) around your scraped dataset to serve averaged

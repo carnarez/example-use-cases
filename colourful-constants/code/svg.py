@@ -53,10 +53,9 @@ line_svg : string.Template
     - `x1`, `y1`, `x2`, `y2`: coordinates of the extremities of the `<line>` element
       (_better call it a segment then..._).
     - `color`: color of the `<line>` element.
-    - `style`: extra styling options for the `<line>` element.
+    - `styles`: extra styling options for the `<line>` element.
 """
 
-import math
 import string
 import sys
 import typing
@@ -80,7 +79,7 @@ svg: string.Template = string.Template(
 )
 
 svg_line: string.Template = string.Template(
-    '<line x1="$x1" y1="$y1" x2="$x2" y2="$y2" stroke="$color" $style />'
+    '<line x1="$x1" y1="$y1" x2="$x2" y2="$y2" stroke="$color" $styles />'
 )
 
 
@@ -195,10 +194,10 @@ def compute_coordinates(
     points: np.array = np.zeros((digits.shape[0] + 1, 2), dtype=np.float32)
 
     for n, digit in enumerate(digits):
-        angle = math.radians(digit*angle_step - 90.0)
+        angle = np.radians(digit*angle_step - 90.0)
 
-        points[n + 1,0] += points[n,0] + math.cos(angle)
-        points[n + 1,1] += points[n,1] + math.sin(angle)
+        points[n + 1,0] += points[n,0] + np.cos(angle)
+        points[n + 1,1] += points[n,1] + np.sin(angle)
 
     if recenter:
         xmin = np.min(points[:,0])
@@ -317,7 +316,6 @@ def render_plot(
         Rendered and collated `<line>`s corresponding to each step.
     """
     lines: typing.List[str] = []
-    style: str = " ".join([f'{k}="{v}"' for k, v in styles.items()])
 
     for n, d in enumerate(digits):
         x1, y1 = points[n]
@@ -331,7 +329,7 @@ def render_plot(
         lines.append(
             svg_line.substitute(
                 color=color,
-                style=style,
+                styles=" ".join([f'{k}="{v}"' for k, v in styles.items()]),
                 x1=f"{x1:.4f}",
                 x2=f"{x2:.4f}",
                 y1=f"{y1:.4f}",

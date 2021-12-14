@@ -20,4 +20,4 @@ anymore, or even worth spending time on.
   using a NoSQL database. And some more little things around. :construction:
 * [Scraping meridians](scraping-meridians) where one is offered to scrape some content
   off _Wikipedia_ to generate a 3D representation of our planet. Let's go wild on the
-  visualizations, shall we?
+  visualizations, shall we? (_The folder already contains a quick implementation._)
