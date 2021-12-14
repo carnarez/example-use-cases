@@ -14,3 +14,5 @@ One could also decide to plot instant plane positions extracted from the
 [documentation of the associated API](https://opensky-network.org/apidoc/))... how do
 flight trajectories translate in various
 [map projections](https://en.wikipedia.org/wiki/Map_projection)?
+
+![Map](map.svg)
