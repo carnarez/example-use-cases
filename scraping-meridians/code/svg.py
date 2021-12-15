@@ -14,30 +14,30 @@ from bs4 import BeautifulSoup
 size: int = 1
 
 grid: typing.Tuple[int, int] = (45, 90)
-land: np.array = np.zeros((180*size, 360*size), dtype=np.int8)
+land: np.array = np.zeros((180 * size, 360 * size), dtype=np.int8)
 wiki: str = "https://en.wikipedia.org/wiki"
 
 svg: string.Template = string.Template(
     '<?xml version="1.0" encoding="utf-8" ?>\n'
-    '<svg '
+    "<svg "
     'width="$width" height="$height" '
     'version="1.2" '
     'xmlns="http://www.w3.org/2000/svg" '
     'xmlns:ev="http://www.w3.org/2001/xml-events" '
     'xmlns:xlink="http://www.w3.org/1999/xlink"'
-    '>'
-    '<defs />'
-    '$plot'
-    '</svg>'
+    ">"
+    "<defs />"
+    "$plot"
+    "</svg>"
 )
 
 svg_point: string.Template = string.Template(
-    '<rect '
+    "<rect "
     'x="$x" y="$y" '
     'rx="$rx" ry="$ry" '
     'width="$width" height="$width" '
     'fill="$color" $style '
-    '/>'
+    "/>"
 )
 
 
@@ -69,7 +69,7 @@ def _ith(i: int) -> str:
         return f"{n}th"
 
 
-def _nth(lat: float, lng: float) -> typing.Tuple[int, int]:
+def _nth(lat: float, lng: float) -> typing.List[int]:
     """Apply the resolution transformation to convert coordinates to integers.
 
     Parameters
@@ -81,11 +81,11 @@ def _nth(lat: float, lng: float) -> typing.Tuple[int, int]:
 
     Returns
     -------
-    : typing.Tuple[int, int]
+    : typing.List[int]
         Latitude and longitude as integers, according to the chosen resolution and
         grid-step size.
     """
-    return tuple(map(lambda x: int(round(x*size, 0)), (lat, lng)))
+    return list(map(lambda x: int(round(x * size, 0)), (lat, lng)))
 
 
 def fetch_content(url: str) -> str:
@@ -206,32 +206,32 @@ def approximate_unknown(arr: np.array) -> np.array:
     if len(np.where(arr == 0)[0]):
 
         # only water up there
-        arr[0,:] = 2
+        arr[0, :] = 2
 
         # first pass: approximate unknown latitudes
         # applied only on the known longitudes
-        for lng in range(0, 360*size, size):
-            for lat in range(1, 180*size):
-                if not arr[lat,lng]:
-                    arr[lat,lng] = arr[lat - 1, lng]
+        for lng in range(0, 360 * size, size):
+            for lat in range(1, 180 * size):
+                if not arr[lat, lng]:
+                    arr[lat, lng] = arr[lat - 1, lng]
 
     if len(np.where(arr == 0)[0]):
 
         # second pass: approximate unknown longitudes
-        for lat in range(1, 180*size):
-            for lng in range(0, 360*size, size):
-                curr_value = arr[lat,lng]
+        for lat in range(1, 180 * size):
+            for lng in range(0, 360 * size, size):
+                curr_value = arr[lat, lng]
 
                 try:
-                    next_value = arr[lat,lng + size]
+                    next_value = arr[lat, lng + size]
                 except IndexError:
-                    next_value = arr[lat,0]
-                    
+                    next_value = arr[lat, 0]
+
                 if curr_value == next_value:
-                    arr[lat,lng:lng + size] = curr_value
+                    arr[lat, lng : lng + size] = curr_value
                 else:
-                    arr[lat,lng:lng + size//2] = curr_value
-                    arr[lat,lng + size//2:lng + size] = next_value
+                    arr[lat, lng : lng + size // 2] = curr_value
+                    arr[lat, lng + size // 2 : lng + size] = next_value
 
     arr[np.where(arr == 2)] = 0  # sea is absence of land
 
@@ -253,26 +253,28 @@ def average_grid(arr: np.array) -> np.array:
     """
     avg: np.array = np.zeros(grid, dtype=np.int8)
 
-    fx = 180*size//grid[0]
-    fy = 360*size//grid[1]
+    fx = 180 * size // grid[0]
+    fy = 360 * size // grid[1]
 
-    hfx = fx//2
-    hfy = fy//2
+    hfx = fx // 2
+    hfy = fy // 2
 
     nlat, nlng = arr.shape
 
     # periodic boundary conditions
-    arr_pbc = np.hstack((arr[:,nlng - hfy:nlng], arr))
-    arr_pbc = np.hstack((arr_pbc, arr[:,0:hfy]))
+    arr_pbc = np.hstack((arr[:, nlng - hfy : nlng], arr))
+    arr_pbc = np.hstack((arr_pbc, arr[:, 0:hfy]))
 
     # averages
     for lat in range(grid[0]):
         for lng in range(grid[1]):
-            lat_min = 0 if lat*fx - hfx < 0 else lat*fx - hfx
-            lat_max = nlat if lat*fx + hfx >= nlat else lat*fx + hfx
-            lng_min = lng*fy
-            lng_max = lng*fy + 2*hfy
-            avg[lat,lng] = int(round(np.mean(arr_pbc[lat_min:lat_max,lng_min:lng_max]), 0))
+            lat_min = 0 if lat * fx - hfx < 0 else lat * fx - hfx
+            lat_max = nlat if lat * fx + hfx >= nlat else lat * fx + hfx
+            lng_min = lng * fy
+            lng_max = lng * fy + 2 * hfy
+            avg[lat, lng] = int(
+                round(np.mean(arr_pbc[lat_min:lat_max, lng_min:lng_max]), 0)
+            )
 
     return avg
 
@@ -282,7 +284,7 @@ def render_plot(
     radius: int,
     margin: int,
     colors: typing.Dict[int, str] = {0: "#0969da", 1: "#39d353"},
-    styles: typing.Dict[str, str] = {}
+    styles: typing.Dict[str, str] = {},
 ) -> str:
     """Generate the SVG plot.
 
@@ -318,12 +320,12 @@ def render_plot(
     for lat in range(nlat):
         for lng in range(nlng):
             points += svg_point.substitute(
-                x=lng*(radius + margin) + margin,
-                y=lat*(radius + margin) + margin,
+                x=lng * (radius + margin) + margin,
+                y=lat * (radius + margin) + margin,
                 rx=rxy,
                 ry=rxy,
                 width=radius,
-                color=colors[arr[lat,lng]],
+                color=colors[arr[lat, lng]],
                 style=" ".join([f'{k}="{v}"' for k, v in styles.items()]),
             )
 
@@ -340,7 +342,7 @@ if __name__ == "__main__":
         land = approximate_unknown(land)
         np.save(filename, land)
 
-    if grid != (180*size, 360*size):
+    if grid != (180 * size, 360 * size):
         land = average_grid(land)
 
     radius = 8
