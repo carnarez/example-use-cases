@@ -145,7 +145,7 @@ Keep in mind that if you are using [`Docker Desktop`](https://www.docker.com/pro
 
 ## Add local images to `microk8s` registry
 
-**Update 2021:** `microk8s` now allows to push images directly to a its own [built-in registry](https://microk8s.io/docs/registry-built-in). Kepp on tagging and pushing:
+**Update 2021:** `microk8s` now allows to push images directly to a its own [built-in registry](https://microk8s.io/docs/registry-built-in). Keep on tagging and pushing:
 
 ```bash
 $ docker build --tag localhost:32000/whatever:registry
